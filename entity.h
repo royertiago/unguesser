@@ -14,6 +14,8 @@ struct Entry {
     /* Answers that players had given to this entry.
      * Note that this list almost surely is incomplete;
      * that is, not all questions in the database have answers here.
+     *
+     * Invariant: the Answer::question pointers are in increasing order.
      */
     std::vector<Answer> answers;
 };
