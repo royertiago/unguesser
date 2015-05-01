@@ -24,3 +24,10 @@ and algorithmic attributes; every struct that have algorithmic attributes
 will have a comment `// Algorithmic attributes`, that "defines" a section
 --- every algorithmic attribute and only algorithmic attributes
 appear after this commentary.
+
+Structs instead of classes
+--------------------------
+
+The emphasis of this program is on the algorithm, not in great software engineering
+nor object-orientation principles.
+Thus, most of the data is held in structs rather than classes.
