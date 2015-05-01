@@ -53,4 +53,4 @@ Database example
     2 -1
     3 1
 
-An extended database can be found in [`ine.db](ine.db).
+An extended database can be found in [`ine.db`](ine.db).
