@@ -8,17 +8,17 @@ has its own line.
 
 The database is divided in two sections.
 The first section contains the questions,
-and the second contains the database entries,
+and the second contains the database entities,
 together with their respective answers.
 
 The question section contains the number of questions
 (lets call Q)
 followed by Q lines, each line with a question.
 
-The entry section contains the number of entries
+The entity section contains the number of entries
 (lets call E)
 followed by E entries.
-Each entry contains its name (in a single line),
+Each entity contains its name (in a single line),
 followed by the number of answers
 (lets call A),
 followed by A pairs `question_index answer`.

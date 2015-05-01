@@ -4,14 +4,14 @@
 #include <vector>
 #include "answer.h"
 
-/* A database entry.
+/* An entity that the user will think of and the program will try to guess.
  */
-struct Entry {
-    /* Full display name of this entry.
+struct Entity {
+    /* Full display name of this entity.
      */
     std::string name;
 
-    /* Answers that players had given to this entry.
+    /* Answers that players had given to this entity.
      * Note that this list almost surely is incomplete;
      * that is, not all questions in the database have answers here.
      *
