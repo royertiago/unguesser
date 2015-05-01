@@ -11,4 +11,7 @@ My aim is to make the program both capable of self-training
 (add new entities and questions to the database)
 and error-tolerant (tolerating a few wrong answers from the user).
 
+See [`algorithm.md`](algorithm.md) for the algorithm used
+and implementation details.
+
 (_This project is an assignment of the INE5430 discipline --- Artificial Inelligence._)
