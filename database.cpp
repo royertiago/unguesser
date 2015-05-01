@@ -26,7 +26,8 @@ DataBase DataBase::parse( std::istream & is ) {
             a.question = &database.questions[question - 1];
             e.answers.push_back( a );
         }
-        is.ignore(); // trailin newline
+        is.ignore(); // trailing newline
+        database.entities.push_back(e);
     }
     return database;
 }
