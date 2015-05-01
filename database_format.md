@@ -38,7 +38,7 @@ Database example
     3
     1 -0.5
     2 -1
-    1 1
+    3 1
     Green
     2
     1 1
