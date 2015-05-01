@@ -12,6 +12,7 @@ My aim is to make the program both capable of self-training
 and error-tolerant (tolerating a few wrong answers from the user).
 
 See [`algorithm.md`](algorithm.md) for the algorithm used
-and implementation details.
+and implementation details;
+see [`design_decision.md`](design_decisions.md) for important design decisions.
 
 (_This project is an assignment of the INE5430 discipline --- Artificial Inelligence._)
