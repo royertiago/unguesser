@@ -23,7 +23,7 @@ struct DataBase {
     /* Writes the database in the given output stream.
      * The database format is described in database_format.md.
      */
-    void write( std::ostream & );
+    void write( std::ostream & ) const;
 };
 
 #endif // DATABASE_H
