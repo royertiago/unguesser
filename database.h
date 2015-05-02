@@ -15,6 +15,14 @@ struct DataBase {
     std::vector<Question> questions;
     std::vector<Entity> entities;
 
+    DataBase() = default;
+    /* Copy and movement needs to mantain invariants.
+     */
+    DataBase( const DataBase & );
+    DataBase( DataBase&& );
+    DataBase & operator=( const DataBase & );
+    DataBase & operator=( DataBase&& );
+
     /* Parse a database from the given input stream.
      * The database format is described in database_format.md.
      * This function assumes the database follows that format strictly.
