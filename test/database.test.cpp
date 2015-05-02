@@ -1,35 +1,11 @@
 #include "database.h"
+#include "sample_database.h"
 #include <sstream>
 #include <catch.hpp>
 
-static const char sample_database[] =
-"3\n"
-"Is this color bright?\n"
-"This color appear in Brazil's flag?\n"
-"Is this color associated with girls and women?\n"
-"4\n"
-"Red\n"
-"3\n"
-"1 -0.5\n"
-"2 -1\n"
-"3 1\n"
-"Green\n"
-"2\n"
-"1 1\n"
-"2 1\n"
-"Blue\n"
-"2\n"
-"2 1\n"
-"3 -1\n"
-"Pink\n"
-"3\n"
-"1 1\n"
-"2 -1\n"
-"3 1\n"
-;
-
+#include <iostream>
 TEST_CASE( "DataBase::parse", "[DataBase][parse]" ) {
-    std::stringstream stream( sample_database );
+    std::stringstream stream( sample_database_text );
     DataBase db = DataBase::parse(stream);
 
     REQUIRE( db.questions.size() == 3 );
@@ -79,33 +55,7 @@ TEST_CASE( "DataBase::parse", "[DataBase][parse]" ) {
 
 TEST_CASE( "DataBase::write", "[DataBase][write]" ) {
     std::stringstream stream;
-    DataBase db;
-    db.questions = {
-        {"Is this color bright?"},
-        {"This color appear in Brazil's flag?"},
-        {"Is this color associated with girls and women?"},
-    };
-    Question * base = &db.questions[0];
-    db.entities = {
-        {"Red", {
-            {base,     -0.5},
-            {base + 1, -1},
-            {base + 2, 1},
-        }},
-        {"Green", {
-            {base,     1},
-            {base + 1, 1},
-                  }},
-        {"Blue", {
-            {base + 1, 1},
-            {base + 2, -1},
-        }},
-        {"Pink", {
-            {base,     1},
-            {base + 1, -1},
-            {base + 2, 1},
-        }},
-    };
-    db.write(stream);
-    REQUIRE( stream.str() == sample_database );
+    sample_database.write(stream);
+    REQUIRE( stream.str() == sample_database_text );
+    std::cout << "Addr: " << (void*) &sample_database_text << '\n';
 }
