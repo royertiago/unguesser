@@ -19,6 +19,13 @@ struct Entity {
      * Invariant: the Answer::question pointers are in increasing order.
      */
     std::vector<Answer> answers;
+
+// Algorithmic attributes
+    /* Similarity level between this entity and the current answer vector.
+     * This value is computed by the function ::similarity,
+     * in header algorithm.h.
+     */
+    double similarity;
 };
 
 #endif // ENTITY_H
