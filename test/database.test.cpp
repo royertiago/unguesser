@@ -76,3 +76,36 @@ TEST_CASE( "DataBase::parse", "[DataBase][parse]" ) {
     CHECK( e.answers[2].question == base + 2 );
     CHECK( e.answers[2].answer == 1 );
 }
+
+TEST_CASE( "DataBase::write", "[DataBase][write]" ) {
+    std::stringstream stream;
+    DataBase db;
+    db.questions = {
+        {"Is this color bright?"},
+        {"This color appear in Brazil's flag?"},
+        {"Is this color associated with girls and women?"},
+    };
+    Question * base = &db.questions[0];
+    db.entities = {
+        {"Red", {
+            {base,     -0.5},
+            {base + 1, -1},
+            {base + 2, 1},
+        }},
+        {"Green", {
+            {base,     1},
+            {base + 1, 1},
+                  }},
+        {"Blue", {
+            {base + 1, 1},
+            {base + 2, -1},
+        }},
+        {"Pink", {
+            {base,     1},
+            {base + 1, -1},
+            {base + 2, 1},
+        }},
+    };
+    db.write(stream);
+    REQUIRE( stream.str() == sample_database );
+}
