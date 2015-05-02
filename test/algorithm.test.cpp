@@ -122,3 +122,19 @@ TEST_CASE( "compute_bisection_factor function", "[algorithm]" ) {
         CHECK( db.questions[2].negative_factor == 1 );
     }
 }
+
+TEST_CASE( "rank_questions function", "[algorithm]" ) {
+    DataBase db = sample_database;
+    Question * base = &db.questions[0];
+    std::vector<Answer> ans = {{base, 0}, {base + 1, 0.5}, {base + 2, -0.5}};
+    compute_similarity( db, ans );
+    compute_bisection_factor( db, -1 );
+    auto vec = rank_questions( db, 3 );
+    REQUIRE( vec.size() == 3 );
+    CHECK( vec[0].first == base + 1 );
+    CHECK( vec[0].second == Approx(0) );
+    CHECK( vec[1].first == base + 2 );
+    CHECK( vec[1].second == Approx(-1) );
+    CHECK( vec[2].first == base );
+    CHECK( vec[2].second == Approx(-1.5) );
+}
