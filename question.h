@@ -13,7 +13,8 @@ struct Question {
     /* Classification potential (binary search factor)
      * These values try to codify how well this question bissects the database.
      * positive_factor is the sum of all positive answers for this question.
-     * negative_factor is the sum of all negative answers for this question.
+     * negative_factor is the sum of all negative answers for this question,
+     * multiplied by -1.
      * The higher is the value of min(positive_factor, negative_factor),
      * the greater is the worst possible bissection,
      * and the greater is the chance that this question will be chosen next.
