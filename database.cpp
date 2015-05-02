@@ -34,13 +34,13 @@ DataBase DataBase::parse( std::istream & is ) {
 
 void DataBase::write( std::ostream & os ) const {
     const Question * base = &questions[0];
-    os << questions.size();
+    os << questions.size() << '\n';
     for( const Question & q : questions )
         os << q.text << '\n';
-    os << entities.size();
+    os << entities.size() << '\n';
     for( const Entity & e : entities ) {
         os << e.name << '\n';
-        os << e.answers.size();
+        os << e.answers.size() << '\n';
         for( const Answer & a : e.answers )
             os << a.question - base + 1 << ' ' << a.answer << '\n';
     }
