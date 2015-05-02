@@ -87,3 +87,38 @@ TEST_CASE( "compute_similarity function", "[similarity][algorithm]" ) {
     CHECK( db.entities[2].similarity == 1 );
     CHECK( db.entities[3].similarity == -1 );
 }
+
+TEST_CASE( "compute_bisection_factor function", "[algorithm]" ) {
+    DataBase db = sample_database;
+    Question * base = &db.questions[0];
+    std::vector<Answer> ans = {{base, 0}, {base + 1, 0.5}, {base + 2, -0.5}};
+    compute_similarity( db, ans );
+
+    SECTION( "highest possible threshold" ) {
+        compute_bisection_factor( db, 1.5 );
+        CHECK( db.questions[0].positive_factor == 0 );
+        CHECK( db.questions[0].negative_factor == 0 );
+        CHECK( db.questions[1].positive_factor == 0 );
+        CHECK( db.questions[1].negative_factor == 0 );
+        CHECK( db.questions[2].positive_factor == 0 );
+        CHECK( db.questions[2].negative_factor == 0 );
+    }
+    SECTION( "lowest possible threshold" ) {
+        compute_bisection_factor( db, -1 );
+        CHECK( db.questions[0].positive_factor == 2 );
+        CHECK( db.questions[0].negative_factor == 0.5 );
+        CHECK( db.questions[1].positive_factor == 2 );
+        CHECK( db.questions[1].negative_factor == 2 );
+        CHECK( db.questions[2].positive_factor == 2 );
+        CHECK( db.questions[2].negative_factor == 1 );
+    }
+    SECTION( "intermediate threshold" ) {
+        compute_bisection_factor( db, 0 );
+        CHECK( db.questions[0].positive_factor == 1 );
+        CHECK( db.questions[0].negative_factor == 0 );
+        CHECK( db.questions[1].positive_factor == 2 );
+        CHECK( db.questions[1].negative_factor == 0 );
+        CHECK( db.questions[2].positive_factor == 0 );
+        CHECK( db.questions[2].negative_factor == 1 );
+    }
+}

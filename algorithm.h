@@ -19,4 +19,12 @@ double similarity( const Entity &, const std::vector<Answer>& partial_answer_vec
  */
 void compute_similarity( DataBase &, const std::vector<Answer>& );
 
+/* Assign the attributes Question::positive_factor and Question::negative_factor
+ * with its correct values; but uses only the entities whose similarity
+ * is equal to or greater than the threshold.
+ *
+ * The threshold argumet helps choosing the question for the "next" bisection.
+ */
+void compute_bisection_factor( DataBase &, double threshold );
+
 #endif // ALGORITHM_H
