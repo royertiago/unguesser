@@ -57,5 +57,4 @@ TEST_CASE( "DataBase::write", "[DataBase][write]" ) {
     std::stringstream stream;
     sample_database.write(stream);
     REQUIRE( stream.str() == sample_database_text );
-    std::cout << "Addr: " << (void*) &sample_database_text << '\n';
 }
