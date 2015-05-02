@@ -17,3 +17,8 @@ double similarity( const Entity & e, const std::vector<Answer> & ans ) {
     }
     return sim;
 }
+
+void compute_similarity( DataBase & db, const std::vector<Answer> & ans ) {
+    for( auto & e : db.entities )
+        e.similarity = similarity(e, ans);
+}
