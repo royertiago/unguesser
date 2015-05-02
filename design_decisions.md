@@ -31,3 +31,12 @@ Structs instead of classes
 The emphasis of this program is on the algorithm, not in great software engineering
 nor object-orientation principles.
 Thus, most of the data is held in structs rather than classes.
+
+Class invariants
+----------------
+
+Any class or struct may define "Invariants"; informal descriptions
+of conditions that must be held true for the lifetime of that class' objects.
+(These descriptions must remain informal because of
+C++'s lack of native support to invariants.)
+No function will state explicitly that the invariant is assumed or will be mantained.

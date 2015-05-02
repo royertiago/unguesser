@@ -17,6 +17,7 @@ struct DataBase {
 
     /* Parse a database from the given input stream.
      * The database format is described in database_format.md.
+     * This function assumes the database follows that format strictly.
      */
     static DataBase parse( std::istream & );
 
