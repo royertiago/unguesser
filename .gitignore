@@ -2,3 +2,4 @@
 *.dep.mk
 .*.swp
 test/test
+main
