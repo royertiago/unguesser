@@ -24,6 +24,10 @@ struct Question {
      */
     double positive_factor;
     double negative_factor;
+
+    /* Wether the "official" answer to this question is known or not.
+     */
+    bool used;
 };
 
 #endif // QUESTION_H
