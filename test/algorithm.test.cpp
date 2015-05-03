@@ -80,12 +80,39 @@ TEST_CASE( "Similarity algorithm", "[similarity][algorithm]" ) {
 TEST_CASE( "compute_similarity function", "[similarity][algorithm]" ) {
     DataBase db = sample_database;
     Question * base = &db.questions[0];
-    std::vector<Answer> ans = {{base, 0}, {base + 1, 0.5}, {base + 2, -0.5}};
-    compute_similarity( db, ans );
-    CHECK( db.entities[0].similarity == -1 );
-    CHECK( db.entities[1].similarity == 0.5 );
-    CHECK( db.entities[2].similarity == 1 );
-    CHECK( db.entities[3].similarity == -1 );
+    SECTION( "Single valid answer" ) {
+        std::vector<Answer> ans = {{base, 0.0}};
+        compute_similarity( db, ans );
+        CHECK( db.entities[0].similarity == 0 );
+        CHECK( db.entities[1].similarity == 0 );
+        CHECK( db.entities[2].similarity == 0 );
+        CHECK( db.entities[3].similarity == 0 );
+        CHECK( db.questions[0].used == true );
+        CHECK( db.questions[1].used == false );
+        CHECK( db.questions[2].used == false );
+    }
+    SECTION( "Two valid answers" ) {
+        std::vector<Answer> ans = {{base + 1, 0.5}, {base + 2, -0.5}};
+        compute_similarity( db, ans );
+        CHECK( db.entities[0].similarity == -1 );
+        CHECK( db.entities[1].similarity == 0.5 );
+        CHECK( db.entities[2].similarity == 1 );
+        CHECK( db.entities[3].similarity == -1 );
+        CHECK( db.questions[0].used == false );
+        CHECK( db.questions[1].used == true );
+        CHECK( db.questions[2].used == true );
+    }
+    SECTION( "Three valid answers" ) {
+        std::vector<Answer> ans = {{base, 0}, {base + 1, 0.5}, {base + 2, -0.5}};
+        compute_similarity( db, ans );
+        CHECK( db.entities[0].similarity == -1 );
+        CHECK( db.entities[1].similarity == 0.5 );
+        CHECK( db.entities[2].similarity == 1 );
+        CHECK( db.entities[3].similarity == -1 );
+        CHECK( db.questions[0].used == true );
+        CHECK( db.questions[1].used == true );
+        CHECK( db.questions[2].used == true );
+    }
 }
 
 TEST_CASE( "compute_bisection_factor function", "[algorithm]" ) {

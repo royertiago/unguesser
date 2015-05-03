@@ -16,6 +16,8 @@ double similarity( const Entity &, const std::vector<Answer>& partial_answer_vec
 
 /* Assign the attribute Entity::similarity of each entity in the database
  * with the similarity computed by the function ::similarity.
+ *
+ * Also set Question::used accordingly to each question in the answer vector.
  */
 void compute_similarity( DataBase &, const std::vector<Answer>& );
 
@@ -23,7 +25,7 @@ void compute_similarity( DataBase &, const std::vector<Answer>& );
  * with its correct values; but uses only the entities whose similarity
  * is equal to or greater than the threshold.
  *
- * The threshold argumet helps choosing the question for the "next" bisection.
+ * The threshold argument helps choosing the question for the "next" bisection.
  */
 void compute_bisection_factor( DataBase &, double threshold );
 

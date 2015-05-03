@@ -22,6 +22,11 @@ double similarity( const Entity & e, const std::vector<Answer> & ans ) {
 void compute_similarity( DataBase & db, const std::vector<Answer> & ans ) {
     for( auto & e : db.entities )
         e.similarity = similarity(e, ans);
+    for( auto & q : db.questions )
+        q.used = false;
+    Question * base = &db.questions[0];
+    for( auto & a : ans )
+        db.questions[a.question - base].used = true;
 }
 
 void compute_bisection_factor( DataBase & db, double threshold ) {
