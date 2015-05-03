@@ -31,7 +31,7 @@ void Unguesser::seed( long long unsigned new_seed ) {
 
 const Question * Unguesser::next_question() {
     compute_similarity( db, partial_answers );
-    double min = -DBL_MAX, max = DBL_MAX;
+    double min = DBL_MAX, max = -DBL_MAX;
     for( const auto & e : db.entities ) {
         min = std::min(min, e.similarity);
         max = std::max(max, e.similarity);
