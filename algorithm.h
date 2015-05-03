@@ -35,9 +35,7 @@ void compute_bisection_factor( DataBase &, double threshold );
  *  (positive_factor, negative_factor), and compute the distance to the point (X/2, X/2)
  *  using simple euclidean distance.
  *  Finally, multiply the distance by -1. This is the score of that question.
- *
- * Returns only the first n pairs.
  */
-std::vector<std::pair<Question *, double>> rank_questions( DataBase &, std::size_t n );
+std::vector<std::pair<Question *, double>> rank_questions( DataBase & );
 
 #endif // ALGORITHM_H

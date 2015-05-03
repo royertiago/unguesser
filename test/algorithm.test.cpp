@@ -129,7 +129,7 @@ TEST_CASE( "rank_questions function", "[algorithm]" ) {
     std::vector<Answer> ans = {{base, 0}, {base + 1, 0.5}, {base + 2, -0.5}};
     compute_similarity( db, ans );
     compute_bisection_factor( db, -1 );
-    auto vec = rank_questions( db, 3 );
+    auto vec = rank_questions( db );
     REQUIRE( vec.size() == 3 );
     CHECK( vec[0].first == base + 1 );
     CHECK( vec[0].second == Approx(0) );

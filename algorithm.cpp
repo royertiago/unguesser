@@ -38,10 +38,7 @@ void compute_bisection_factor( DataBase & db, double threshold ) {
             }
 }
 
-std::vector<std::pair<Question *, double>> rank_questions(
-    DataBase & db,
-    std::size_t n )
-{
+std::vector<std::pair<Question *, double>> rank_questions( DataBase & db ) {
     double X = 0;
     for( auto & q : db.questions )
         X = std::max(X, q.positive_factor + q.negative_factor);
@@ -54,5 +51,5 @@ std::vector<std::pair<Question *, double>> rank_questions(
         return p1.second > p2.second;
     });
 
-    return std::vector<std::pair<Question *, double>>(vec.begin(), vec.begin()+n);
+    return vec;
 }
