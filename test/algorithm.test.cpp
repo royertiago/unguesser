@@ -154,8 +154,15 @@ TEST_CASE( "rank_questions function", "[algorithm]" ) {
     DataBase db = sample_database;
     Question * base = &db.questions[0];
     std::vector<Answer> ans = {{base, 0}, {base + 1, 0.5}, {base + 2, -0.5}};
+
     compute_similarity( db, ans );
-    compute_bisection_factor( db, -1 );
+    /* The default behavior for compute_similarity is to also
+     * write Question::used. We will override it for this test only.
+     */
+    for( auto & q : db.questions )
+        q.used = false;
+
+    compute_bisection_factor( db, -1.0 );
     auto vec = rank_questions( db );
     REQUIRE( vec.size() == 3 );
     CHECK( vec[0].first == base + 1 );

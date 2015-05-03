@@ -30,6 +30,7 @@ void compute_similarity( DataBase &, const std::vector<Answer>& );
 void compute_bisection_factor( DataBase &, double threshold );
 
 /* Returns a list of pairs (question, score), ordered by score.
+ * Any used question (a question with Question::used set) is ignored.
  * The score is calculated in the following way:
  *  First, let X be the maximum possible sum of positive_factor and negative_factor
  *  in the entire database.
