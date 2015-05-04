@@ -25,6 +25,9 @@ enum class UnguesserMove {
      * If the guess was wrong, the user might let the Unguesser
      * ask some more questions - just call Unguesser::next_question
      * - or follow the same procedure as in GIVE_UP.
+     *
+     * Unguesser::next_move() will likely return ASK_QUESTION
+     * when called again.
      */
     GUESS_ANSWER,
 
@@ -35,6 +38,9 @@ enum class UnguesserMove {
      *
      * Note that the answer may already be in the database.
      * You should call Unguesser::match_name before inserting a new value.
+     *
+     * Do not assume the next_move() will be RESTART;
+     * the Unguesser may want the user to add a new question to the database.
      */
     GIVE_UP,
 
@@ -82,6 +88,11 @@ public:
     void seed( long long unsigned );
 
     /* Gets the next move.
+     *
+     * Unguesser::next_move is designed to be called from within a
+     * switch/case statement; so, it should have full control
+     * over the game flow.
+     * The only exceptions are documented in each enum value in UnguesserMove.
      */
     UnguesserMove next_move();
 

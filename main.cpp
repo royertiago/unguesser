@@ -50,7 +50,8 @@ int main() {
                 std::cin >> ans;
                 if( ans == "y" || ans == "Y" ) {
                     std::cout << "Good! Thanks for playing!\n";
-                    move = UnguesserMove::RESTART_GAME;
+                    unguesser.inform_answer( e );
+                    move = UnguesserMove::RESTART_GAME; // exits the loop
                     break;
                 }
                 std::cin.ignore();
@@ -60,8 +61,7 @@ int main() {
                 std::getline( std::cin, ans );
                 if( ans != "" )
                     ask_entity( ans );
-                else
-                    move = UnguesserMove::ASK_QUESTION;
+                move = unguesser.next_move();
             }
             break;
             case UnguesserMove::GIVE_UP: {
@@ -70,13 +70,12 @@ int main() {
                 std::cin.ignore();
                 std::getline( std::cin, ans );
                 ask_entity( ans );
-                std::cout << "Thanks for helping!\n";
-                move = UnguesserMove::RESTART_GAME;
+                std::cout << "Thanks for answering!\n";
+                move = UnguesserMove::RESTART_GAME; // exits the loop
             }
             break;
             case UnguesserMove::ASK_NEW_QUESTION: {
-                std::cout << "I give up.\n"
-                    << "I have these entities in the database:\n";
+                std::cout << "Consider these in my database:\n";
                 auto best = unguesser.best_guesses();
                 for( auto ptr : best )
                     std::cout << ptr->name << '\n';
@@ -97,6 +96,7 @@ int main() {
             }
             break;
             case UnguesserMove::RESTART_GAME:
+                // should never happen
             break;
         }
     }
