@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <iostream>
 #include "database.h"
 
@@ -44,6 +45,15 @@ DataBase & DataBase::operator=( DataBase&& other ) {
     return *this;
 }
 
+void DataBase::push_back( Question && q ) {
+    if( questions.size() < questions.capacity() ) {
+        questions.push_back( std::move(q) );
+        return;
+    }
+
+    throw std::logic_error( "Unimplemented complete push_back." );
+}
+
 DataBase DataBase::parse( std::istream & is ) {
     DataBase database;
     int Q;
@@ -54,6 +64,12 @@ DataBase DataBase::parse( std::istream & is ) {
         std::getline( is, q.text );
         database.questions.push_back( q );
     }
+
+    /* GAMBIARRRRRRA
+     * This allows for one push_back.
+     */
+    database.questions.reserve( database.questions.size() + 1 );
+
     int E;
     is >> E;
     is.ignore(); // trailing newline

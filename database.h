@@ -23,6 +23,12 @@ struct DataBase {
     DataBase & operator=( const DataBase & );
     DataBase & operator=( DataBase&& );
 
+    /* Pushes a new question to the database.
+     * Do not use questions.push_back directly,
+     * because that might break the invariant.
+     */
+    void push_back( Question && );
+
     /* Parse a database from the given input stream.
      * The database format is described in database_format.md.
      * This function assumes the database follows that format strictly.
