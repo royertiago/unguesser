@@ -69,7 +69,32 @@ class Unguesser {
 
     long long unsigned _seed;
     std::mt19937 rng;
+
+    /* Current state of the Unguesser.
+     */
+    UnguesserMove move_state = UnguesserMove::ASK_QUESTION;
+
+    /* How much an entity must be close to the top
+     * to be treated as a possible answer to the question.
+     * "Close to the top" means higher similarity value.
+     *
+     * The closer to 0 is percentile_tolerance, the smallest is the vector
+     * best_guesses.
+     */
+    double percentile_tolerance = 0.5;
+
+    /* True when the answer given by the user
+     * constitutes a new entity in the database.
+     */
+    bool answer_is_new_entity = false;
+
+    /* Entities with similarity higher than the threshold
+     * are returned by best_guesses(). This value is computed in next_question.
+     */
+    double threshold;
+
 public:
+
     /* Constructs the database of this object
      * using the specified file.
      *
@@ -131,7 +156,7 @@ public:
      * Note that we return a pointer vector;
      * each pointer points to the actual object inside the database.
      */
-    std::vector<const Entity*> entities();
+    std::vector< const Entity * > entities();
 
     /* Set of methods that allows the user to inform the correct answer
      * to the Unguesser.

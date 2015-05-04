@@ -29,6 +29,45 @@ void Unguesser::seed( long long unsigned new_seed ) {
     _seed = new_seed;
 }
 
+UnguesserMove Unguesser::next_move() {
+    switch( move_state ) {
+        case UnguesserMove::ASK_QUESTION:
+            if( best_guesses().size() == 1 )
+                return move_state = UnguesserMove::GUESS_ANSWER;
+
+            return move_state = UnguesserMove::ASK_QUESTION;
+
+        case UnguesserMove::GUESS_ANSWER:
+            // Our guess was wrong. We must consider other options.
+            if( db.questions.size() == partial_answers.size() )
+                return move_state = UnguesserMove::GIVE_UP;
+
+            // We still have other questions to make.
+            percentile_tolerance = std::min( 3 * percentile_tolerance, 0.5 );
+            return move_state = UnguesserMove::ASK_QUESTION;
+
+        case UnguesserMove::GIVE_UP:
+            if( answer_is_new_entity &&
+                guess()->similarity > 0.75 * partial_answers.size()
+            )
+                return move_state = UnguesserMove::ASK_NEW_QUESTION;
+            if( !answer_is_new_entity && db.questions.size() > partial_answers.size() )
+                return move_state = UnguesserMove::ASK_NEW_QUESTION;
+            // fall-through
+        case UnguesserMove::ASK_NEW_QUESTION:
+            // fall-through
+        case UnguesserMove::RESTART_GAME:
+            return move_state = UnguesserMove::RESTART_GAME;
+    }
+}
+
+void Unguesser::restart() {
+    partial_answers.clear();
+    move_state = UnguesserMove::ASK_QUESTION;
+    percentile_tolerance = 0.5;
+    answer_is_new_entity = false;
+}
+
 const Question * Unguesser::next_question() {
     compute_similarity( db, partial_answers );
     double min = DBL_MAX, max = -DBL_MAX;
@@ -36,7 +75,9 @@ const Question * Unguesser::next_question() {
         min = std::min(min, e.similarity);
         max = std::max(max, e.similarity);
     }
-    double threshold = (min + max)/2;
+    threshold = ( min*percentile_tolerance + max*(1 - percentile_tolerance) ) / 2;
+    percentile_tolerance *= (3.0/4);
+
     compute_bisection_factor( db, threshold );
 
     auto vec = rank_questions( db );
@@ -66,7 +107,26 @@ void Unguesser::add_answer( const Question * question, double answer ) {
     );
 }
 
-std::vector<const Entity*> Unguesser::entities() {
+const Entity * Unguesser::guess() {
+    double best = 0;
+    const Entity * ret;
+    for( auto & e : db.entities )
+        if( e.similarity > best ) {
+            best = e.similarity;
+            ret = &e;
+        }
+    return ret;
+}
+
+std::vector< const Entity * > Unguesser::best_guesses() {
+    std::vector< const Entity * > ret_val;
+    for( auto & e : db.entities )
+        if( e.similarity > threshold )
+            ret_val.push_back( &e );
+    return ret_val;
+}
+
+std::vector< const Entity * > Unguesser::entities() {
     compute_similarity( db, partial_answers );
     std::vector<const Entity*> ret_val;
     for( const auto& e : db.entities )
@@ -78,4 +138,66 @@ std::vector<const Entity*> Unguesser::entities() {
         }
     );
     return ret_val;
+}
+
+std::vector< const Entity * > Unguesser::match_name( std::string str ) {
+    std::vector<const Entity*> ret_val;
+    for( auto & e : db.entities )
+        if( e.name.find(str) != std::string::npos )
+            ret_val.push_back( &e );
+    return ret_val;
+}
+
+void Unguesser::inform_answer( const Entity * entity ) {
+    // Safe because we have ownership over e.
+    Entity & e = const_cast<Entity &>( *entity );
+    if( &e == guess() )
+        move_state = UnguesserMove::RESTART_GAME;
+
+    auto it = e.answers.begin();
+    auto jt = partial_answers.begin();
+    while( it != e.answers.end() && jt != partial_answers.end() ) {
+        if( it->question < jt->question ) {
+            /* e.answers have a question partial_answers does not.
+             * Just increment 'it', since we cannot extract more data from here.
+             */
+            ++it;
+        }
+        else if( jt->question < it->question ) {
+            /* partial_answers have a question e.answers does not.
+             * We must insert that question in e.answers.
+             */
+            it = e.answers.insert(it, *jt);
+            ++jt;
+        }
+        else {
+            // A question both vectors have.
+            it->answer = (3 * it->answer + jt->answer)/4.0;
+            ++it;
+            ++jt;
+        }
+    }
+    while( jt != partial_answers.end() )
+        e.answers.push_back( *jt++ );
+}
+
+void Unguesser::inform_answer( std::string name ) {
+    double similarity = 0;
+    for( auto & ans : partial_answers )
+        similarity += ans.answer * ans.answer;
+
+    db.entities.push_back({name, partial_answers, similarity});
+}
+
+void Unguesser::inform_new_question(
+    std::string question_text,
+    std::vector< std::pair<const Entity *, double> > answers
+) {
+    db.push_back({question_text});
+    Question * ptr = &db.questions.back();
+    for( auto pair: answers ) {
+        // Safe because we have ownership over pair.first.
+        Entity & e = const_cast<Entity &>(*pair.first);
+        e.answers.push_back({ ptr, pair.second });
+    }
 }
