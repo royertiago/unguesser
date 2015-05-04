@@ -8,6 +8,53 @@
 #include <random>
 #include "database.h"
 
+/* Possible moves for the Unguesser.
+ * These values are returned by Unguesser::next_move().
+ */
+enum class UnguesserMove {
+    /* The Unguesser wants to ask the user a new question,
+     * through the method Unguesser::next_question().
+     */
+    ASK_QUESTION,
+
+    /* The Unguesser thinks it has found the correct answer,
+     * avaliable in Unguesser::guess().
+     *
+     * If the Unguesser guessed right, Unguesser::inform_answer
+     * should be called with the return of Unguesser::guess().
+     * If the guess was wrong, the user might let the Unguesser
+     * ask some more questions - just call Unguesser::next_question
+     * - or follow the same procedure as in GIVE_UP.
+     */
+    GUESS_ANSWER,
+
+    /* The Unguesser have made lots of questions and still has no idea
+     * of which entity the user tought.
+     * It want to be informed about the answer,
+     * throughout Unguesser::inform_answer().
+     *
+     * Note that the answer may already be in the database.
+     * You should call Unguesser::match_name before inserting a new value.
+     */
+    GIVE_UP,
+
+    /* The Unguesser had made lots of questions
+     * and has only a few possible options,
+     * but cannot separate between these options,
+     * and wants the user to formulate a question to separate them.
+     * The guess vector is avaliable in Unguesser::best_guesses().
+     * The new question should be informed via Unguesser::inform_new_question.
+     *
+     * This is a qualified GIVE_UP.
+     */
+    ASK_NEW_QUESTION,
+
+    /* The game ended and should be restarted,
+     * via Unguesser::restart.
+     */
+    RESTART_GAME,
+};
+
 class Unguesser {
     std::streampos file_position;
     DataBase db;
@@ -34,6 +81,15 @@ public:
     long long unsigned seed() const;
     void seed( long long unsigned );
 
+    /* Gets the next move.
+     */
+    UnguesserMove next_move();
+
+    /* Restarts the game.
+     * No new information is recorded in the database.
+     */
+    void restart();
+
     /* Obtains a new question to be answered by the user.
      * If there is no new questions, throw std::runtime_error.
      *
@@ -48,11 +104,56 @@ public:
      */
     void add_answer( const Question *, double answer );
 
+    /* Returns the best guess the Unguesser have to the player.
+     * This may be called at any moment, altough the result
+     * should be more precise when next_move() returns GUESS_ANSWER.
+     */
+    const Entity * guess();
+
+    /* Returns the best guesses the Unguesser have to the player.
+     * This may be called at any moment, altough the result
+     * should be more precise when next_move() returns ASK_NEW_QUESTION.
+     */
+    std::vector< const Entity * > best_guesses();
+
     /* Returns a sorted vector with all the entities of this class.
      * Note that we return a pointer vector;
      * each pointer points to the actual object inside the database.
      */
     std::vector<const Entity*> entities();
+
+    /* Set of methods that allows the user to inform the correct answer
+     * to the Unguesser.
+     * Best used only when the Unguesser gives up.
+     *
+     * match_name asks for a name, or a partial name,
+     * and will return every Entity in the database whose name matched,
+     * either fully or partially.
+     * Note it might return a null vector.
+     *
+     * The first inform_answer receives a pointer from the database,
+     * usually one of the pointers returned via match_name.
+     * The database is then updated with the current answers.
+     * This question should also be called with the return of Unguesser::guess(),
+     * to thell the game it got that right.
+     *
+     * The second inform_answer introduces a new value in the database.
+     */
+    std::vector< const Entity * > match_name( std::string name );
+    void inform_answer( const Entity * );
+    void inform_answer( std::string name );
+
+    /* Add a new question in the database.
+     * question_text is the question text, including the question mark.
+     * answers is a vector with pairs (Entity, answer_for_that_entity),
+     * that the user gave.
+     * Usually, the entities in this vector are from Unguesser::best_guesses,
+     * after next_move returned ASK_NEW_QUESTION.
+     */
+    void inform_new_question(
+        std::string question_text,
+        std::vector< std::pair<const Entity *, double> > answers
+    );
 };
 
 #endif // UNGUESSER_H
