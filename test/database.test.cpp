@@ -58,3 +58,34 @@ TEST_CASE( "DataBase::write", "[DataBase][write]" ) {
     sample_database.write(stream);
     REQUIRE( stream.str() == sample_database_text );
 }
+
+TEST_CASE( "DataBase::push_back", "[DataBase]" ) {
+    DataBase db = sample_database;
+
+    for( int i = db.questions.capacity() - db.questions.size() + 1; i >= 0; i-- )
+        db.push_back( {"Dummy question"} );
+
+    Question * base = &db.questions[0];
+
+    CHECK( db.questions[0].text == "Is this color bright?" );
+    CHECK( db.questions[1].text == "This color appear in Brazil's flag?" );
+    CHECK( db.questions[2].text == "Is this color associated with girls and women?" );
+
+    Entity e = db.entities[0];
+    CHECK( e.answers[0].question == base );
+    CHECK( e.answers[1].question == base + 1 );
+    CHECK( e.answers[2].question == base + 2 );
+
+    e = db.entities[1];
+    CHECK( e.answers[0].question == base );
+    CHECK( e.answers[1].question == base + 1 );
+
+    e = db.entities[2];
+    CHECK( e.answers[0].question == base + 1 );
+    CHECK( e.answers[1].question == base + 2 );
+
+    e = db.entities[3];
+    CHECK( e.answers[0].question == base );
+    CHECK( e.answers[1].question == base + 1 );
+    CHECK( e.answers[2].question == base + 2 );
+}

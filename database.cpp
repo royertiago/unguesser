@@ -51,7 +51,14 @@ void DataBase::push_back( Question && q ) {
         return;
     }
 
-    throw std::logic_error( "Unimplemented complete push_back." );
+    auto new_questions = questions;
+    new_questions.push_back( std::move(q) );
+
+    for( auto & e : entities )
+        for( auto & a : e.answers )
+            a.question = &new_questions[a.question - &questions[0]];
+
+    questions.swap(new_questions);
 }
 
 DataBase DataBase::parse( std::istream & is ) {
@@ -64,11 +71,6 @@ DataBase DataBase::parse( std::istream & is ) {
         std::getline( is, q.text );
         database.questions.push_back( q );
     }
-
-    /* GAMBIARRRRRRA
-     * This allows for one push_back.
-     */
-    database.questions.reserve( database.questions.size() + 1 );
 
     int E;
     is >> E;
