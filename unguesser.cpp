@@ -80,7 +80,7 @@ const Question * Unguesser::next_question() {
         min = std::min(min, e.similarity);
         max = std::max(max, e.similarity);
     }
-    threshold = ( min*percentile_tolerance + max*(1 - percentile_tolerance) ) / 2;
+    threshold = ( min*percentile_tolerance + max*(1 - percentile_tolerance) );
     percentile_tolerance *= (3.0/4);
 
     compute_bisection_factor( db, threshold );
