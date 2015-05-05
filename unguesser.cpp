@@ -38,7 +38,12 @@ UnguesserMove Unguesser::next_move() {
             return move_state = UnguesserMove::ASK_QUESTION;
 
         case UnguesserMove::GUESS_ANSWER:
-            // Our guess was wrong. We must consider other options.
+            /* inform_answer unconditionally resets the move_state
+             * to UnguesserMove::RESTART_GAME.
+             * If we reach here, it means our guess was wrong,
+             * but the user still wants we to continue guessing.
+             */
+
             if( db.questions.size() == partial_answers.size() )
                 return move_state = UnguesserMove::GIVE_UP;
 
@@ -149,10 +154,16 @@ std::vector< const Entity * > Unguesser::match_name( std::string str ) {
 }
 
 void Unguesser::inform_answer( const Entity * entity ) {
+    /* If this method (or its overloaded version) is called,
+     * it means that either we got the right answer,
+     * or the user is providing us with the right answer.
+     * In both cases, it makes no sense to keep asking questions to the user,
+     * so we simply restart the game.
+     */
+    move_state = UnguesserMove::RESTART_GAME;
+
     // Safe because we have ownership over e.
     Entity & e = const_cast<Entity &>( *entity );
-    if( &e == guess() )
-        move_state = UnguesserMove::RESTART_GAME;
 
     auto it = e.answers.begin();
     auto jt = partial_answers.begin();
@@ -182,6 +193,8 @@ void Unguesser::inform_answer( const Entity * entity ) {
 }
 
 void Unguesser::inform_answer( std::string name ) {
+    move_state = UnguesserMove::RESTART_GAME;
+
     double similarity = 0;
     for( auto & ans : partial_answers )
         similarity += ans.answer * ans.answer;
