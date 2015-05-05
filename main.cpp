@@ -11,6 +11,9 @@ namespace command_line {
 "one database could be about people and other could be about courses.\n"
 "\n"
 "Options:"
+"--seed <n>\n"
+"    Choose the seed of the random number generator.\n"
+"\n"
 "--help\n"
 "    Show this help and quit.\n"
 "\n"
@@ -26,9 +29,17 @@ namespace command_line {
 namespace command_line {
     std::string file_name;
     bool debug = false;
+
+    long long unsigned seed;
+    bool seed_set = false;
+
     void parse( cmdline::args && args ) {
         while( args.size() > 0 ) {
             std::string arg = args.next();
+            if( arg == "--seed" ) {
+                args >> seed;
+                continue;
+            }
             if( arg == "--help" ) {
                 std::cout << args.program_name() << help_message;
                 std::exit(0);
@@ -57,6 +68,12 @@ int main( int argc, char ** argv ) {
 
     auto ptr = std::make_unique<std::fstream>(command_line::file_name);
     Unguesser unguesser(std::move(ptr));
+
+    if( command_line::seed_set )
+        unguesser.seed( command_line::seed );
+
+    if( command_line::debug )
+        std::cout << "Seed: " << unguesser.seed() << '\n';
 
     std::cout << "Think of an entity. I will try to deduce which entity is.\n";
     std::cout << "After each question, type a number between -1 and 1 to indicate\n"
