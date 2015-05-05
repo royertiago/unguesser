@@ -1,9 +1,61 @@
+namespace command_line {
+    const char help_message[] =
+" <database>\n"
+"Runs one round of the Unguesser using the given database.\n"
+"\n"
+"The unguesser is a program that tries to determine what are you thinking.\n"
+"Think of an entity. The Unguesser will make several questions\n"
+"and try to guess which entity you tought.\n"
+"The Unguesser relies on a database with questions and entities.\n"
+"Differents databases have different questions; for instance,\n"
+"one database could be about people and other could be about courses.\n"
+"\n"
+"Options:"
+"--help\n"
+"    Show this help and quit.\n"
+"\n"
+"--debug\n"
+"    Show some debug information\n"
+;
+} // namespace command_line
 #include <iostream>
 #include <fstream>
+#include "cmdline/args.hpp"
 #include "unguesser.h"
 
-int main() {
-    auto ptr = std::make_unique<std::fstream>("ine.db");
+namespace command_line {
+    std::string file_name;
+    bool debug = false;
+    void parse( cmdline::args && args ) {
+        while( args.size() > 0 ) {
+            std::string arg = args.next();
+            if( arg == "--help" ) {
+                std::cout << args.program_name() << help_message;
+                std::exit(0);
+            }
+            if( arg == "--debug" ) {
+                debug = true;
+                continue;
+            }
+            if( file_name == "" ) {
+                file_name = arg;
+                continue;
+            }
+            std::cerr << "Error: Two databases provided: " << file_name
+                << " and " << arg << '\n';
+            std::exit(1);
+        }
+        if( file_name == "" ) {
+            std::cerr << "Error: No database provided.\n";
+            std::exit(1);
+        }
+    }
+} // namespace command_line
+
+int main( int argc, char ** argv ) {
+    command_line::parse( cmdline::args(argc, argv) );
+
+    auto ptr = std::make_unique<std::fstream>(command_line::file_name);
     Unguesser unguesser(std::move(ptr));
 
     std::cout << "Think of an entity. I will try to deduce which entity is.\n";
@@ -35,6 +87,15 @@ int main() {
         switch( move ) {
             case UnguesserMove::ASK_QUESTION: {
                 const Question * q = unguesser.next_question();
+
+                if( command_line::debug ) {
+                    std::cout << "Threshold: " << unguesser.similarity_threshold()
+                        << "\n[score] entity\n";
+                    for( auto entity_ptr : unguesser.entities() )
+                        std::cout << "[" << entity_ptr->similarity << "] "
+                            << entity_ptr->name << std::endl;
+                }
+
                 std::cout << q->text << std::endl;
                 double ans;
                 std::cin >> ans;
