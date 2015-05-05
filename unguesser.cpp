@@ -214,3 +214,7 @@ void Unguesser::inform_new_question(
         e.answers.push_back({ ptr, pair.second });
     }
 }
+
+double Unguesser::similarity_threshold() const {
+    return threshold;
+}

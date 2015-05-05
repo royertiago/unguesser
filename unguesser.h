@@ -190,6 +190,13 @@ public:
         std::string question_text,
         std::vector< std::pair<const Entity *, double> > answers
     );
+
+// Internal Unguesser information
+
+    /* Return the threshold that determines which entities will be used
+     * to determine the next question.
+     */
+    double similarity_threshold() const;
 };
 
 #endif // UNGUESSER_H
