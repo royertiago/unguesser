@@ -187,6 +187,7 @@ int main( int argc, char ** argv ) {
                     std::cin.ignore();
                     answers.push_back( std::make_pair(ptr, v) );
                 }
+                unguesser.inform_new_question( ans, answers );
                 std::cout << "Thanks for helping!\n";
             }
             break;
