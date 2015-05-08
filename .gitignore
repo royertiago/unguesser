@@ -1,5 +1,10 @@
 *.o
 *.dep.mk
 .*.swp
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.pdf
 test/test
 main

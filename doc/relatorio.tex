@@ -1,0 +1,76 @@
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazil]{babel}
+
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shapes}
+
+\newcommand{\ask}{\lstinline"ASK_QUESTION"}
+\newcommand{\guess}{\lstinline"GUESS_ANSWER"}
+\newcommand{\restart}{\lstinline"RESTART"}
+\newcommand{\giveup}{\lstinline"GIVE_UP"}
+\newcommand{\newquestion}{\lstinline"ASK_NEW_QUESTION"}
+\newcommand{\unguesser}{\lstinline"Unguesser"}
+
+\lstset{
+    basicstyle=\ttfamily
+}
+
+\begin{document}
+
+\title{
+    INE5430 --- Inteligência Artificial \\
+    Unguesser: jogo de adivinhações
+}
+\author{
+    \begin{tabular}{r l}
+        Lucas Berri Cristofolini & 12100757 \\
+        Tiago Royer & 12100776 \\
+        Wagner Fernando Gascho & 12100779
+    \end{tabular}
+}
+
+\maketitle
+
+\section{Máquina de Estados}
+
+A classe principal do programa, \unguesser,
+controla a ordem das operações.
+É esta classe que escolha qual a próxima pergunta a ser feita,
+quando e quem será chutado,
+e quando desistir ou pedir ajuda.
+
+Esta classe é melhor entendida como o autômato finito
+descrito da figura \ref{unguesser-automata}.
+
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}[-stealth]
+        \begin{scope}[every node/.style={shape=ellipse,draw}]
+            \node (ask) {\ask};
+            \node (guess) [below = of ask] {\guess};
+            \node (giveup) [right = of guess] {\giveup};
+            \node (newquestion) [below = of giveup] {\newquestion};
+            \node (restart) [below = of guess] {\restart};
+        \end{scope}
+
+        \draw (ask) to[loop above] (ask);
+        \draw (ask) to[bend left] (guess);
+        \draw (guess) to[bend left] (ask);
+        \draw (guess) to (giveup);
+        \draw (guess) to (restart);
+        \draw (giveup) to (newquestion);
+        \draw (giveup) to (restart);
+        \draw (newquestion) to (restart);
+        \draw (node cs:name=restart, angle=180) to [bend left = 45]
+              (node cs:name=ask, angle=185);
+    \end{tikzpicture}
+
+    \caption{Máquina de estados que corresponde à classe \unguesser.}
+    \label{unguesser-automata}
+\end{figure}
+
+\end{document}
