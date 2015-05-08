@@ -115,7 +115,7 @@ int main( int argc, char ** argv ) {
     };
 
     UnguesserMove move = UnguesserMove::ASK_QUESTION;
-    while( move != UnguesserMove::RESTART_GAME ) {
+    while( (move = unguesser.next_move() ) != UnguesserMove::RESTART_GAME ) {
         switch( move ) {
             case UnguesserMove::ASK_QUESTION: {
                 const Question * q = unguesser.next_question();
@@ -135,7 +135,6 @@ int main( int argc, char ** argv ) {
                 std::cin >> ans;
                 std::cin.ignore();
                 unguesser.add_answer( q, ans );
-                move = unguesser.next_move();
             }
             break;
             case UnguesserMove::GUESS_ANSWER: {
@@ -157,7 +156,6 @@ int main( int argc, char ** argv ) {
                 std::getline( std::cin, ans );
                 if( ans != "" )
                     ask_entity( ans );
-                move = unguesser.next_move();
             }
             break;
             case UnguesserMove::GIVE_UP: {
@@ -166,7 +164,6 @@ int main( int argc, char ** argv ) {
                 std::getline( std::cin, ans );
                 ask_entity( ans );
                 std::cout << "Thanks for answering!\n";
-                move = UnguesserMove::RESTART_GAME; // exits the loop
             }
             break;
             case UnguesserMove::ASK_NEW_QUESTION: {
