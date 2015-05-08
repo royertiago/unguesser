@@ -38,6 +38,7 @@ namespace command_line {
             std::string arg = args.next();
             if( arg == "--seed" ) {
                 args >> seed;
+                seed_set = true;
                 continue;
             }
             if( arg == "--help" ) {
