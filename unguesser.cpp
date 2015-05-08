@@ -17,7 +17,12 @@ Unguesser::Unguesser( std::unique_ptr<std::iostream> && file ) {
 }
 
 Unguesser::~Unguesser() {
-    db.write(*file_ptr);
+    if( file_ptr )
+        db.write(*file_ptr);
+}
+
+void Unguesser::disable_write() {
+    file_ptr = nullptr;
 }
 
 long long unsigned Unguesser::seed() const {

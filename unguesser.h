@@ -106,6 +106,10 @@ public:
      */
     ~Unguesser();
 
+    /* Do not write to the file given in the input.
+     */
+    void disable_write();
+
     /* Gets/sets the seed used in the random number generator.
      */
     long long unsigned seed() const;

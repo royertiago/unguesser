@@ -14,6 +14,10 @@ namespace command_line {
 "--seed <n>\n"
 "    Choose the seed of the random number generator.\n"
 "\n"
+"--no-write\n"
+"    Each time the program is ran it tries to adjust the database\n"
+"    to the answers given by the user. This option disables this update.\n"
+"\n"
 "--help\n"
 "    Show this help and quit.\n"
 "\n"
@@ -33,12 +37,18 @@ namespace command_line {
     long long unsigned seed;
     bool seed_set = false;
 
+    bool no_write = false;
+
     void parse( cmdline::args && args ) {
         while( args.size() > 0 ) {
             std::string arg = args.next();
             if( arg == "--seed" ) {
                 args >> seed;
                 seed_set = true;
+                continue;
+            }
+            if( arg == "--no-write" ) {
+                no_write = true;
                 continue;
             }
             if( arg == "--help" ) {
@@ -69,6 +79,9 @@ int main( int argc, char ** argv ) {
 
     auto ptr = std::make_unique<std::fstream>(command_line::file_name);
     Unguesser unguesser(std::move(ptr));
+
+    if( command_line::no_write )
+        unguesser.disable_write();
 
     if( command_line::seed_set )
         unguesser.seed( command_line::seed );
