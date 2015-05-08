@@ -94,6 +94,7 @@ int main( int argc, char ** argv ) {
             << " (or 0 if there is no correct one).\n";
         int index;
         std::cin >> index;
+        std::cin.ignore();
         if( index == 0 )
             unguesser.inform_answer( name );
         else
@@ -119,6 +120,7 @@ int main( int argc, char ** argv ) {
                 std::cout << q->text << std::endl;
                 double ans;
                 std::cin >> ans;
+                std::cin.ignore();
                 unguesser.add_answer( q, ans );
                 move = unguesser.next_move();
             }
@@ -129,13 +131,13 @@ int main( int argc, char ** argv ) {
                     << e->name << "\nIs this right? [y/n] ";
                 std::string ans;
                 std::cin >> ans;
+                std::cin.ignore();
                 if( ans == "y" || ans == "Y" ) {
                     std::cout << "Good! Thanks for playing!\n";
                     unguesser.inform_answer( e );
                     move = UnguesserMove::RESTART_GAME; // exits the loop
                     break;
                 }
-                std::cin.ignore();
                 std::cout << "No? Please, type the entity name,"
                     << " so I can adjust my data.\n"
                     << "Or leave it empty, if you want me to try again.\n";
@@ -148,7 +150,6 @@ int main( int argc, char ** argv ) {
             case UnguesserMove::GIVE_UP: {
                 std::string ans;
                 std::cout << "I give up. On what are you thinking?\n";
-                std::cin.ignore();
                 std::getline( std::cin, ans );
                 ask_entity( ans );
                 std::cout << "Thanks for answering!\n";
@@ -163,7 +164,6 @@ int main( int argc, char ** argv ) {
                 std::cout << "Please, devise a question to help me"
                     << " differentiate between them.\n";
                 std::string ans;
-                std::cin.ignore();
                 std::getline( std::cin, ans );
                 std::vector< std::pair<const Entity *, double> > answers;
                 for( auto ptr : best ) {
@@ -171,6 +171,7 @@ int main( int argc, char ** argv ) {
                         << ptr->name << "?\n";
                     double v;
                     std::cin >> v;
+                    std::cin.ignore();
                     answers.push_back( std::make_pair(ptr, v) );
                 }
                 std::cout << "Thanks for helping!\n";
