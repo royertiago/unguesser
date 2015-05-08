@@ -32,7 +32,15 @@ void Unguesser::seed( long long unsigned new_seed ) {
 UnguesserMove Unguesser::next_move() {
     switch( move_state ) {
         case UnguesserMove::ASK_QUESTION:
-            if( best_guesses().size() == 1 )
+            /* If our last move was a question and we narrowed the guess space
+             * to a single guess, let's make this guess.
+             *
+             * Alternatively, if there is no more questions to be asked,
+             * we will first try to guess something
+             * before asking the user for help.
+             */
+            if( best_guesses().size() == 1 ||
+                remaining_questions() == 0 )
                 return move_state = UnguesserMove::GUESS_ANSWER;
 
             return move_state = UnguesserMove::ASK_QUESTION;
@@ -44,7 +52,7 @@ UnguesserMove Unguesser::next_move() {
              * but the user still wants we to continue guessing.
              */
 
-            if( db.questions.size() == partial_answers.size() )
+            if( remaining_questions() == 0 )
                 return move_state = UnguesserMove::GIVE_UP;
 
             // We still have other questions to make.
