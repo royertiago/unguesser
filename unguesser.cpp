@@ -218,3 +218,7 @@ void Unguesser::inform_new_question(
 double Unguesser::similarity_threshold() const {
     return threshold;
 }
+
+std::size_t Unguesser::remaining_questions() const {
+    return db.questions.size() - partial_answers.size();
+}

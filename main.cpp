@@ -107,7 +107,9 @@ int main( int argc, char ** argv ) {
                 const Question * q = unguesser.next_question();
 
                 if( command_line::debug ) {
-                    std::cout << "Threshold: " << unguesser.similarity_threshold()
+                    std::cout << "Remaining questions: "
+                        << unguesser.remaining_questions() << '\n'
+                        << "Threshold: " << unguesser.similarity_threshold()
                         << "\n[score] entity\n";
                     for( auto entity_ptr : unguesser.entities() )
                         std::cout << "[" << entity_ptr->similarity << "] "

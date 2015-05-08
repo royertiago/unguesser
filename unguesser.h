@@ -197,6 +197,10 @@ public:
      * to determine the next question.
      */
     double similarity_threshold() const;
+
+    /* Return how many questions the Unguesser may guess.
+     */
+    std::size_t remaining_questions() const;
 };
 
 #endif // UNGUESSER_H
