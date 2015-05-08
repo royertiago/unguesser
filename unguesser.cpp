@@ -6,8 +6,9 @@
 
 Unguesser::Unguesser( std::unique_ptr<std::iostream> && file ) {
     file_ptr = std::move(file);
-    file_position = file_ptr->tellg();
+    auto file_position = file_ptr->tellg();
     db = DataBase::parse(*file_ptr);
+    file_ptr->seekg(file_position);
 
     _seed = std::chrono::system_clock::now().time_since_epoch().count();
     rng.seed(_seed);
@@ -16,7 +17,6 @@ Unguesser::Unguesser( std::unique_ptr<std::iostream> && file ) {
 }
 
 Unguesser::~Unguesser() {
-    file_ptr->seekg(file_position);
     db.write(*file_ptr);
 }
 

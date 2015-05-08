@@ -62,7 +62,6 @@ enum class UnguesserMove {
 };
 
 class Unguesser {
-    std::streampos file_position;
     DataBase db;
     std::vector<Answer> partial_answers;
     std::unique_ptr<std::iostream> file_ptr;
