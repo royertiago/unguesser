@@ -71,9 +71,11 @@ UnguesserMove Unguesser::next_move() {
                 return move_state = UnguesserMove::ASK_NEW_QUESTION;
             if( !answer_is_new_entity && db.questions.size() > partial_answers.size() )
                 return move_state = UnguesserMove::ASK_NEW_QUESTION;
+
             // fall-through
         case UnguesserMove::ASK_NEW_QUESTION:
-            // fall-through
+            return move_state = UnguesserMove::ASK_NEW_QUESTION;
+
         case UnguesserMove::RESTART_GAME:
             return move_state = UnguesserMove::RESTART_GAME;
     }
@@ -137,6 +139,7 @@ const Entity * Unguesser::guess() {
 }
 
 std::vector< const Entity * > Unguesser::best_guesses() {
+    compute_similarity( db, partial_answers );
     /* We need to recompute the threshold because this method might be called
      * after inform_answer(std::string), which introdues a new entity
      * (with high similarity value) in the database.
@@ -178,14 +181,6 @@ std::vector< const Entity * > Unguesser::match_name( std::string str ) {
 }
 
 void Unguesser::inform_answer( const Entity * entity ) {
-    /* If this method (or its overloaded version) is called,
-     * it means that either we got the right answer,
-     * or the user is providing us with the right answer.
-     * In both cases, it makes no sense to keep asking questions to the user,
-     * so we simply restart the game.
-     */
-    move_state = UnguesserMove::RESTART_GAME;
-
     // Safe because we have ownership over e.
     Entity & e = const_cast<Entity &>( *entity );
 
@@ -214,16 +209,31 @@ void Unguesser::inform_answer( const Entity * entity ) {
     }
     while( jt != partial_answers.end() )
         e.answers.push_back( *jt++ );
+
+    /* If this method (or its overloaded version) is called,
+     * it means that either we got the right answer,
+     * or the user is providing us with the right answer.
+     * In both cases, it makes no sense to keep asking questions to the user.
+     * But it might be useful to ask the user to inform a new question,
+     * if several entities are too close to each other.
+     */
+    if( best_guesses().size() > 1 )
+        move_state = UnguesserMove::ASK_NEW_QUESTION;
+    else
+        move_state = UnguesserMove::RESTART_GAME;
 }
 
 void Unguesser::inform_answer( std::string name ) {
-    move_state = UnguesserMove::RESTART_GAME;
-
     double similarity = 0;
     for( auto & ans : partial_answers )
         similarity += ans.answer * ans.answer;
 
     db.entities.push_back({name, partial_answers, similarity});
+
+    if( best_guesses().size() > 1 )
+        move_state = UnguesserMove::ASK_NEW_QUESTION;
+    else
+        move_state = UnguesserMove::RESTART_GAME;
 }
 
 void Unguesser::inform_new_question(
@@ -237,6 +247,10 @@ void Unguesser::inform_new_question(
         Entity & e = const_cast<Entity &>(*pair.first);
         e.answers.push_back({ ptr, pair.second });
     }
+
+    /* After ASK_NEW_QUESTION, the only transition is to RESTART_GAME.
+     */
+    move_state = UnguesserMove::RESTART_GAME;
 }
 
 double Unguesser::similarity_threshold() const {
