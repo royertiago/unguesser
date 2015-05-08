@@ -21,6 +21,23 @@ Unguesser::~Unguesser() {
         db.write(*file_ptr);
 }
 
+void Unguesser::recompute_statistics() {
+    if( clean )
+        return;
+
+    compute_similarity( db, partial_answers );
+    double min = DBL_MAX, max = -DBL_MAX;
+    for( const auto & e : db.entities ) {
+        min = std::min(min, e.similarity);
+        max = std::max(max, e.similarity);
+    }
+    threshold = ( min*percentile_tolerance + max*(1 - percentile_tolerance) );
+
+    compute_bisection_factor( db, threshold );
+
+    clean = true;
+}
+
 void Unguesser::disable_write() {
     file_ptr = nullptr;
 }
@@ -86,19 +103,13 @@ void Unguesser::restart() {
     move_state = UnguesserMove::ASK_QUESTION;
     percentile_tolerance = 0.5;
     answer_is_new_entity = false;
+    clean = false;
 }
 
 const Question * Unguesser::next_question() {
-    compute_similarity( db, partial_answers );
-    double min = DBL_MAX, max = -DBL_MAX;
-    for( const auto & e : db.entities ) {
-        min = std::min(min, e.similarity);
-        max = std::max(max, e.similarity);
-    }
-    threshold = ( min*percentile_tolerance + max*(1 - percentile_tolerance) );
+    clean = false;
+    recompute_statistics();
     percentile_tolerance *= (3.0/4);
-
-    compute_bisection_factor( db, threshold );
 
     auto vec = rank_questions( db );
     if( vec.empty() )
@@ -128,6 +139,8 @@ void Unguesser::add_answer( const Question * question, double answer ) {
 }
 
 const Entity * Unguesser::guess() {
+    recompute_statistics();
+
     double best = 0;
     const Entity * ret;
     for( auto & e : db.entities )
@@ -139,27 +152,19 @@ const Entity * Unguesser::guess() {
 }
 
 std::vector< const Entity * > Unguesser::best_guesses() {
-    compute_similarity( db, partial_answers );
-    /* We need to recompute the threshold because this method might be called
-     * after inform_answer(std::string), which introdues a new entity
-     * (with high similarity value) in the database.
-     */
-    double min = DBL_MAX, max = -DBL_MIN;
-    for( const auto & e : db.entities ) {
-        min = std::min(min, e.similarity);
-        max = std::max(max, e.similarity);
-    }
-    threshold = ( min*percentile_tolerance + max*(1 - percentile_tolerance) );
+    recompute_statistics();
 
     std::vector< const Entity * > ret_val;
     for( auto & e : db.entities )
         if( e.similarity > threshold )
             ret_val.push_back( &e );
+
     return ret_val;
 }
 
 std::vector< const Entity * > Unguesser::entities() {
-    compute_similarity( db, partial_answers );
+    recompute_statistics();
+
     std::vector<const Entity*> ret_val;
     for( const auto& e : db.entities )
         ret_val.push_back( &e );
@@ -181,6 +186,8 @@ std::vector< const Entity * > Unguesser::match_name( std::string str ) {
 }
 
 void Unguesser::inform_answer( const Entity * entity ) {
+    clean = false;
+
     // Safe because we have ownership over e.
     Entity & e = const_cast<Entity &>( *entity );
 
@@ -224,6 +231,8 @@ void Unguesser::inform_answer( const Entity * entity ) {
 }
 
 void Unguesser::inform_answer( std::string name ) {
+    clean = false;
+
     double similarity = 0;
     for( auto & ans : partial_answers )
         similarity += ans.answer * ans.answer;
@@ -240,6 +249,8 @@ void Unguesser::inform_new_question(
     std::string question_text,
     std::vector< std::pair<const Entity *, double> > answers
 ) {
+    clean = false;
+
     db.push_back({question_text});
     Question * ptr = &db.questions.back();
     for( auto pair: answers ) {

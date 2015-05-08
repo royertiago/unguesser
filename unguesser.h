@@ -92,6 +92,17 @@ class Unguesser {
      */
     double threshold;
 
+    /* If the attribute 'clean' is true, return immediately; otherwise,
+     * runs 'compute_similarity' and 'compute_bisection_factor' on the database,
+     * updates the threshold value, and sets 'clean' to true.
+     */
+    void recompute_statistics();
+
+    /* Flag used to control when recompute_statistics
+     * will actually do its work.
+     */
+    bool clean = false;
+
 public:
 
     /* Constructs the database of this object
