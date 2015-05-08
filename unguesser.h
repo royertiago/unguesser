@@ -52,6 +52,9 @@ enum class UnguesserMove {
      * The new question should be informed via Unguesser::inform_new_question.
      *
      * This is a qualified GIVE_UP.
+     *
+     * If the user does not want to provide a new question,
+     * simply call Unguesser::restart.
      */
     ASK_NEW_QUESTION,
 

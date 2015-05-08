@@ -176,9 +176,18 @@ int main( int argc, char ** argv ) {
                 for( auto ptr : best )
                     std::cout << ptr->name << '\n';
                 std::cout << "Please, devise a question to help me"
-                    << " differentiate between them.\n";
+                    << " differentiate between them.\n"
+                    << "Or leave it empty, if you do not want to provide a new question.\n";
                 std::string ans;
                 std::getline( std::cin, ans );
+
+                /* Any 'break' statement I'd put here would break the switch,
+                 * not the loop.
+                 * The cleanest way I can think of is to use goto. (sorry, Melgarejo)
+                 */
+                if( ans == "" )
+                    goto exit;
+
                 std::vector< std::pair<const Entity *, double> > answers;
                 for( auto ptr : best ) {
                     std::cout << "What is the answer for the entity "
@@ -198,6 +207,7 @@ int main( int argc, char ** argv ) {
         }
     }
 
+exit:
     if( command_line::debug )
         print_entities();
 
