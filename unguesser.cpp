@@ -137,6 +137,17 @@ const Entity * Unguesser::guess() {
 }
 
 std::vector< const Entity * > Unguesser::best_guesses() {
+    /* We need to recompute the threshold because this method might be called
+     * after inform_answer(std::string), which introdues a new entity
+     * (with high similarity value) in the database.
+     */
+    double min = DBL_MAX, max = -DBL_MIN;
+    for( const auto & e : db.entities ) {
+        min = std::min(min, e.similarity);
+        max = std::max(max, e.similarity);
+    }
+    threshold = ( min*percentile_tolerance + max*(1 - percentile_tolerance) );
+
     std::vector< const Entity * > ret_val;
     for( auto & e : db.entities )
         if( e.similarity > threshold )
