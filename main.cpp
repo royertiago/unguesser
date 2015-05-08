@@ -114,21 +114,25 @@ int main( int argc, char ** argv ) {
             unguesser.inform_answer( names[index-1] );
     };
 
+    auto print_entities = [&](){
+        std::cout << "Remaining questions: "
+            << unguesser.remaining_questions() << '\n'
+            << "Threshold: " << unguesser.similarity_threshold()
+            << "\n[score] entity\n";
+        for( auto entity_ptr : unguesser.entities() )
+            std::cout << "[" << entity_ptr->similarity << "] "
+                << entity_ptr->name << std::endl;
+    };
+
+
     UnguesserMove move = UnguesserMove::ASK_QUESTION;
     while( (move = unguesser.next_move() ) != UnguesserMove::RESTART_GAME ) {
         switch( move ) {
             case UnguesserMove::ASK_QUESTION: {
                 const Question * q = unguesser.next_question();
 
-                if( command_line::debug ) {
-                    std::cout << "Remaining questions: "
-                        << unguesser.remaining_questions() << '\n'
-                        << "Threshold: " << unguesser.similarity_threshold()
-                        << "\n[score] entity\n";
-                    for( auto entity_ptr : unguesser.entities() )
-                        std::cout << "[" << entity_ptr->similarity << "] "
-                            << entity_ptr->name << std::endl;
-                }
+                if( command_line::debug )
+                    print_entities();
 
                 std::cout << q->text << std::endl;
                 double ans;
@@ -193,5 +197,9 @@ int main( int argc, char ** argv ) {
             break;
         }
     }
+
+    if( command_line::debug )
+        print_entities();
+
     return 0;
 }
