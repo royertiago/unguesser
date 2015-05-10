@@ -1,4 +1,4 @@
-10
+13
 Esta disciplina é lecionada por uma mulher?
 Esta disciplina fala a respeito de autômatos finitos?
 Há modelagem de relações entre classes/entidades?
@@ -9,9 +9,12 @@ Você precisa chorar sangue para ser aprovado na disciplina?
 O conteúdo da disciplina está relacionado com grafos?
 40 anos atrás, o conteúdo desta disciplina daria um doutorado, e hoje é só o segundo trabalho a ser implementado?
 De acordo com o professor, os alunos escreviam código que "Não é orientado a objetos"?
+Apesar de ser considerada relativamente simples, esta disciplina possui algum pré-requisito difícil?
+Esta disciplina é terminal (não é pré-requisito para nenhuma outra disciplina)?
+Esta disciplina tem alta rotatividade de professores?
 24
 INE5401 - Introdução à Computação
-10
+13
 1 -1
 2 -0.0625
 3 -1
@@ -22,8 +25,11 @@ INE5401 - Introdução à Computação
 8 -0.4875
 9 -1
 10 -1
+11 -1
+12 1
+13 0.8675
 INE5402 - Programação Orientada a Objetos I
-10
+13
 1 1
 2 -1
 3 0.66875
@@ -34,8 +40,11 @@ INE5402 - Programação Orientada a Objetos I
 8 -0.859412
 9 -0.512789
 10 0.956875
+11 -1
+12 -1
+13 0.5945
 INE5403 - Fundamentos de Matemática Discreta para Computação
-10
+13
 1 -1
 2 1
 3 -1
@@ -46,8 +55,11 @@ INE5403 - Fundamentos de Matemática Discreta para Computação
 8 0.753214
 9 0.012474
 10 -1
+11 -1
+12 -1
+13 -0.8975
 INE5404 - Programação Orientada a Objetos II
-10
+13
 1 -0.683594
 2 -0.715235
 3 1
@@ -58,8 +70,11 @@ INE5404 - Programação Orientada a Objetos II
 8 -1
 9 -1
 10 1
+11 -1
+12 -1
+13 0.4265
 INE5405 - Probabilidade e Estatística
-10
+13
 1 -1
 2 -1
 3 -1
@@ -70,8 +85,11 @@ INE5405 - Probabilidade e Estatística
 8 -1
 9 -1
 10 -1
+11 -0.7895
+12 -1
+13 1
 INE5406 - Sistemas Digitais
-10
+13
 1 -1
 2 1
 3 -1
@@ -82,8 +100,11 @@ INE5406 - Sistemas Digitais
 8 -0.015625
 9 -1
 10 -1
+11 -0.7895
+12 -1
+13 -1
 INE5407 - Ciência Tecnologia e Sociedade
-10
+13
 1 -0.675
 2 -1
 3 -1
@@ -94,8 +115,11 @@ INE5407 - Ciência Tecnologia e Sociedade
 8 -1
 9 -1
 10 -1
+11 -1
+12 -1
+13 0.3475
 INE5408 - Estruturas de Dados
-10
+13
 1 -1
 2 -0.8875
 3 0.66785
@@ -106,8 +130,11 @@ INE5408 - Estruturas de Dados
 8 -0.8125
 9 0.575
 10 -0.5
+11 -1
+12 -1
+13 -0.6875
 INE5409 - Cálculo Numérico para Computação
-10
+13
 1 -1
 2 -1
 3 -1
@@ -118,8 +145,11 @@ INE5409 - Cálculo Numérico para Computação
 8 -1
 9 -0.8925
 10 -1
+11 -0.8975
+12 1
+13 -0.7965
 INE5410 - Programação Concorrente
-10
+13
 1 -1
 2 0.6725
 3 -0.9785
@@ -130,8 +160,11 @@ INE5410 - Programação Concorrente
 8 -0.8965
 9 -1
 10 -1
+11 -1
+12 -1
+13 -0.9875
 INE5411 - Organização de Computadores
-10
+13
 1 -1
 2 0.8375
 3 -1
@@ -142,8 +175,11 @@ INE5411 - Organização de Computadores
 8 0.8875
 9 -1
 10 -1
+11 -1
+12 -1
+13 -1
 INE5412 - Sistemas Operacionais I
-10
+13
 1 -1
 2 -1
 3 1
@@ -154,8 +190,11 @@ INE5412 - Sistemas Operacionais I
 8 -1
 9 -0.1625
 10 -1
+11 -0.6785
+12 -1
+13 -0.5975
 INE5413 - Grafos
-10
+13
 1 -1
 2 -1
 3 0.625
@@ -166,8 +205,11 @@ INE5413 - Grafos
 8 1
 9 -1
 10 -1
+11 0.6895
+12 -1
+13 -1
 INE5414 - Redes de Computadores
-10
+13
 1 -0.925
 2 -1
 3 -1
@@ -178,8 +220,11 @@ INE5414 - Redes de Computadores
 8 0.625
 9 -1
 10 -1
+11 -1
+12 -1
+13 -1
 INE5415 - Teoria da Computação
-10
+13
 1 1
 2 1
 3 -1
@@ -190,8 +235,11 @@ INE5415 - Teoria da Computação
 8 0.875
 9 -0.15625
 10 -1
+11 0.5865
+12 -1
+13 -1
 INE5416 - Paradigmas de Programação
-10
+13
 1 -1
 2 -1
 3 -1
@@ -202,8 +250,11 @@ INE5416 - Paradigmas de Programação
 8 -1
 9 -0.675
 10 0.5675
+11 -1
+12 -1
+13 -0.8425
 INE5417 - Engenharia de Software I
-10
+13
 1 1
 2 -0.15625
 3 1
@@ -214,8 +265,11 @@ INE5417 - Engenharia de Software I
 8 -1
 9 -1
 10 -0.733032
+11 -1
+12 -1
+13 -1
 INE5419 - Engenharia de Software II
-10
+13
 1 -1
 2 -1
 3 0.765
@@ -226,8 +280,11 @@ INE5419 - Engenharia de Software II
 8 -0.125
 9 -1
 10 -1
+11 -0.425
+12 -1
+13 -1
 INE5421 - Linguagens Formais e Compiladores
-10
+13
 1 -1
 2 1
 3 -1
@@ -238,8 +295,11 @@ INE5421 - Linguagens Formais e Compiladores
 8 0.83125
 9 1
 10 -1
+11 -1
+12 -1
+13 -1
 INE5422 - Redes de Computadores II
-10
+13
 1 -1
 2 -1
 3 -1
@@ -250,8 +310,11 @@ INE5422 - Redes de Computadores II
 8 0.625
 9 -1
 10 -1
+11 -1
+12 1
+13 -1
 INE5423 - Bancos de Dados I
-10
+13
 1 1
 2 -1
 3 1
@@ -262,8 +325,11 @@ INE5423 - Bancos de Dados I
 8 -1
 9 -1
 10 -1
+11 -1
+12 -1
+13 -1
 INE5425 - Modelagem e Simulação
-10
+13
 1 -1
 2 -0.125
 3 0.675
@@ -274,8 +340,11 @@ INE5425 - Modelagem e Simulação
 8 -0.425
 9 -1
 10 -1
+11 -1
+12 1
+13 -1
 INE5427 - Planejamento e Gestão de Projetos
-10
+13
 1 1
 2 -1
 3 0.825
@@ -286,8 +355,11 @@ INE5427 - Planejamento e Gestão de Projetos
 8 -1
 9 -1
 10 -1
+11 0.5525
+12 -1
+13 -1
 INE5428 - Informática e Sociedade
-10
+13
 1 -1
 2 -1
 3 -1
@@ -298,3 +370,21 @@ INE5428 - Informática e Sociedade
 8 -1
 9 -1
 10 -1
+11 -1
+12 1
+13 -1
+INE5430 - Inteligência Artificial
+13
+1 -1
+2 0.8925
+3 0.5975
+4 1
+5 -1
+6 -1
+7 -1
+8 1
+9 0.4725
+10 -1
+11 0.2075
+12 1
+13 -1
