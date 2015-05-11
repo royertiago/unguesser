@@ -192,4 +192,34 @@ e começamos de novo.
 
 \subsection{Escolha de novas perguntas}
 
+O algoritmo de escolha de novas perguntas foi construido para tentar,
+simultaneamente,
+criar distinções entre as entidades mais ``aceitáveis'',
+mas, ao mesmo tempo, lidar com a possibilidade de
+a entidade certa ter sido erroneamente classificada como ``não-aceitável''
+(talvez pelo fato de as perguntas anteriores terem sido ruins
+ou por que o usuário errou alguma das questões).
+
+Para garantir a segunda exigência, o algoritmo acabou sendo não-determinístico.
+Para tentar a primeira, o algoritmo usa um gerador ponderado.
+
+Primeiro, o algoritmo constrói a ``questão ideal''.
+Para cada questão, ele soma todas as respostas positivas e todas as negativas,
+separando as positivas das negativas.
+Quanto maior for a diferença entre estes dois valores, melhor é a questão
+(isto é, maior sua seletividade).
+Entretanto, o algoritmo considera apenas as entidades que estão acima
+do limiar de aceitação para somar as respostas.
+
+O algoritmo soma o máximo das respostas positivas e o máximo das respostas negativas
+e divide por dois.
+Cada questão, então, é comparada, usando distância euclidiana,
+contra esta ``questão ideal''.
+Quanto mais desequilibrada e menos seletiva for a questão,
+menor é a chance de ser escolhida.
+
+Desta forma, o algoritmo tem alta probabilidade de escolher uma questão
+que irá discernir a entidade certa no banco de dados,
+mas sem negligenciar a possibilidade de o usuário ter errado alguma resposta.
+
 \end{document}
