@@ -3,6 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[brazil]{babel}
 
+\usepackage{amsmath}
 \usepackage{listings}
 \usepackage{tikz}
 \usetikzlibrary{positioning}
@@ -77,6 +78,7 @@ descrito da figura \ref{unguesser-automata}.
 
 A máquina de estados começa no estado \ask.
 Neste estado, o programa decide fazer uma nova pergunta ao usuário.
+(O algoritmo de escolha da próxima pergunta está descrito na seção \ref{novapergunta}.)
 Após receber a resposta, o sistema ranqueia todas as entidades no banco de dados
 de acordo com o algoritmo descrito na seção \ref{ranqueamento}.
 O programa também atualiza o limiar de aceitação;
@@ -110,6 +112,11 @@ ou nos dizer a resposta
 (transição 4, partimos para o \giveup).
 Nós também tomamos a transição 4 se não há mais perguntas no banco de dados.
 
+Antes de voltarmos para \ask, nós reduzimos o limiar
+para considerar uma entidade aceitável.
+Dessa forma, ficaremos um tempo fazendo novas perguntas
+antes de tentar outra entidade.
+
 No estado \giveup, nós desistimos de tentar acertar a entidade do usuário,
 e pedimos a ele que nos diga no quê ele estava pensando.
 O usuário então digita o nome da entidade.
@@ -137,6 +144,52 @@ com outra entidade.
     não suportam este recomeço;
     elas jogam apenas um jogo por execução.
 }
+
 \section{Ranqueamento \label{ranqueamento}}
+
+Nosso algoritmo de ranqueamento é baseado em álgebra linear.
+O produto interno entre dois vetores está relacionado com o conceito de ortogonalidade.
+Dois vetores não relacionados possuem produto interno nulo;
+dois vetores positivamente relacionados possuem produto interno positivo
+e dois vetores negativamente relacionados possuem produto interno negativo.
+
+Consideramos cada entidade no banco de dados como um vetor.
+Cada elemento do vetor corresponde à resposta que esta entidade dá à disciplina;
+$1$ corresponde ao ``sim'', $-1$ corresponde ao ``não''.
+Valores entre $-1$ e $1$ representam a noção de incerteza;
+por exemplo, nós codificamos ``talvez'' com $0.5$,
+``improvável'' com $-0.5$, e ``não sei'' com $0$.
+
+A lista de respostas que o usuário já deu
+(o vetor parcial das respostas)
+também está neste mesmo formato.
+Ao fazer o produto interno deste vetor com uma entidade no banco de dados,
+nós calculamos o quão relacionada a entidade está com o vetor de respostas.
+Esta é a pontuação da entidade.
+
+O programa ordena as entidades através desta pontuação.
+Quanto maior a pontuação, maior é a chance de o vetor de respostas parcial
+ser aquela entidade.
+
+O limiar de aceitação é uma média ponderada entre a maior pontuação
+e a menor pontuação.
+Todas as entidades com pontuação acima do limiar são consideradas
+``aceitáveis''.
+
+O cálculo da média usa a seguinte fórmula:
+\begin{equation}
+    \text{Limiar de aceitação} =
+    (1-t) * (\text{maior valor}) + t * (\text{menor valor}).
+\end{equation}
+Quanto mais próximo de $0$ é $t$, maior é o limiar de aceitação.
+$t$ inicia o programa em $0.5$.
+Conforme o programa avança,
+$t$ fica cada vez menor,
+até o limiar de aceitação ser suficiente para tornar apenas uma entidade aceitável.
+Então, chutamos enta entidade.
+Caso tenhamos errado, aumentamos $t$ para reduzir o limiar,
+e começamos de novo.
+
+\subsection{Escolha de novas perguntas}
 
 \end{document}
