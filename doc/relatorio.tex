@@ -57,20 +57,86 @@ descrito da figura \ref{unguesser-automata}.
             \node (restart) [below = of guess] {\restart};
         \end{scope}
 
-        \draw (ask) to[loop above] (ask);
-        \draw (ask) to[bend left] (guess);
-        \draw (guess) to[bend left] (ask);
-        \draw (guess) to (giveup);
-        \draw (guess) to (restart);
-        \draw (giveup) to (newquestion);
-        \draw (giveup) to (restart);
-        \draw (newquestion) to (restart);
-        \draw (node cs:name=restart, angle=180) to [bend left = 45]
-              (node cs:name=ask, angle=185);
+        \begin{scope}[auto]
+            \draw (ask) to[loop above] node {1} (ask);
+            \draw (ask) to[bend left] node{2} (guess);
+            \draw (guess) to[bend left] node{3} (ask);
+            \draw (guess) to node{4} (giveup);
+            \draw (guess) to node{5} (restart);
+            \draw (giveup) to node{6} (newquestion);
+            \draw (giveup) to node{7} (restart);
+            \draw (newquestion) to node{8} (restart);
+            \draw (node cs:name=restart, angle=180) to [bend left = 45] node{9}
+                  (node cs:name=ask, angle=185);
+        \end{scope}
     \end{tikzpicture}
 
     \caption{Máquina de estados que corresponde à classe \unguesser.}
     \label{unguesser-automata}
 \end{figure}
+
+A máquina de estados começa no estado \ask.
+Neste estado, o programa decide fazer uma nova pergunta ao usuário.
+Após receber a resposta, o sistema ranqueia todas as entidades no banco de dados
+de acordo com o algoritmo descrito na seção \ref{ranqueamento}.
+O programa também atualiza o limiar de aceitação;
+este valor decide quais as entidades serão consideradas ``válidas''
+(isto é, com boas chances de ser a resposta correta).
+
+O limiar de aceitação começa bastante baixo e vai tornando-se mais estrito
+conforme passa o jogo.
+Enquanto não há uma única resposta,
+a máquina de estados mantém-se no estado \ask,
+através da transição 1.
+Caso o limiar de aceitação seja estrito o bastante
+para apenas uma entidade ser aceitável,
+o programa executa a transição 2,
+e passa ao estado \guess.
+(O programa também faz esta transição
+quando não não há mais questões no banco de dados;
+é uma ``última tentativa'' de acertar o que o usuário estava pensando.)
+
+No estado \guess, o programa pega a entidade melhor ranqueada
+e mostra ao usuário.
+Caso o chute esteja certo, o programa faz a transição 5.
+Ele atualiza o banco de dados,
+incorporando as respostas que o usuário acabou de dar,
+e transita para o estado \restart.
+
+Caso contrário (nos chutamos errado),
+o usuário pode escolher entre nos dar uma nova chance
+(transição 3, voltamos ao \ask)
+ou nos dizer a resposta
+(transição 4, partimos para o \giveup).
+Nós também tomamos a transição 4 se não há mais perguntas no banco de dados.
+
+No estado \giveup, nós desistimos de tentar acertar a entidade do usuário,
+e pedimos a ele que nos diga no quê ele estava pensando.
+O usuário então digita o nome da entidade.
+Caso seja uma entidade que ele conhece, o programa atualiza o banco de dados.
+
+Normalmente, o programa tomaria a transição 7 agora,
+indo parar no estado \restart.
+Entretanto, pode ser que o banco de questões esteja muito ``frágil''.
+Caso cheguemos neste estado sem reduzir a quantidade de entidades válidas para 1,
+faremos a transição por 6, até o estado \newquestion.
+
+Em \newquestion, nós iremos mostrar uma lista de entidades
+(as melhores ranqueadas do banco de dados)
+e pedir que o usuário nos ajude a distingui-las.
+O programa pede que usuário digite uma questão que as distinga,
+e as respostas à esta pergunta para cada uma das entidades.
+Então, adicionamos esta questão e as outras respostas no banco de dados.
+Transitamos por 8 e chegamos em \restart.
+
+Em \restart, a única coisa que podemos fazer é recomeçar o jogo
+(transição 9)
+com outra entidade.
+\footnote{
+    As interfaces com o usuário que implementamos
+    não suportam este recomeço;
+    elas jogam apenas um jogo por execução.
+}
+\section{Ranqueamento \label{ranqueamento}}
 
 \end{document}
