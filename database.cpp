@@ -8,7 +8,8 @@ DataBase::DataBase( const DataBase & other ) :
 {
     /* We need to reroute the pointers in the answers to inside this->questions.
      * For each answer a, a.question is a pointer inside &other.questions[0]
-     * (the C++11 standard mandates std::vector to be contiguous - 23.3.6.1/1)
+     * (the C++11 standard mandates std::vector to be contiguous ---
+     *  Working Draft for the C++ Standard, N3936, paragraph 23.3.6.1/1)
      * so a.question - &other.questions[0] gives the proper index.
      * So, we take the address of questions[index] to have the pointer
      * to same question, but inside our 'questions' vector.
